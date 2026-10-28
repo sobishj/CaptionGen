@@ -2,6 +2,7 @@ import { describe, expect, it, vi } from "vitest";
 import { AppError } from "@/lib/errors";
 import { createAnthropicProvider } from "@/lib/llm/anthropic";
 import { createOpenAiCompatibleProvider } from "@/lib/llm/openai";
+import { describeFailure } from "@/lib/llm/http";
 import type { GenerateOptions } from "@/lib/llm";
 
 const OPTS: GenerateOptions = {
@@ -138,6 +139,34 @@ describe("Anthropic adapter", () => {
     await expectAppError(
       createAnthropicProvider({ apiKey: "k", fetch: hangingFetch }).generate({ ...OPTS, timeoutMs: 20 }),
       "TIMEOUT",
+    );
+  });
+});
+
+describe("describeFailure", () => {
+  const GEMINI = "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions";
+
+  it("explains Gemini's region restriction", () => {
+    const body = '{ "error": { "code": 400, "message": "User location is not supported for the API use.", "status": "FAILED_PRECONDITION" } }';
+    const msg = describeFailure(GEMINI, null, 400, body);
+    expect(msg).toMatch(/doesn't offer its API in the country/);
+    expect(msg).toMatch(/OpenRouter/);
+    expect(msg).toContain('"User location is not supported for the API use."');
+  });
+
+  it("points at the model name on 404 and quotes the provider (Gemini array body)", () => {
+    const body = '[{"error":{"code":404,"message":"models/gemini-pro is not found for API version v1main","status":"NOT_FOUND"}}]';
+    const msg = describeFailure(GEMINI, null, 404, body);
+    expect(msg).toMatch(/model name is wrong or retired/);
+    expect(msg).toContain("models/gemini-pro is not found");
+  });
+
+  it("keeps plain-text bodies and auth hints", () => {
+    expect(describeFailure("https://x.test/v1", null, 500, "upstream exploded")).toBe(
+      'The provider returned HTTP 500. The provider said: "upstream exploded"',
+    );
+    expect(describeFailure("https://x.test/v1", null, 401, '{"error":{"message":"Incorrect API key provided"}}')).toMatch(
+      /rejected the API key \(HTTP 401\).*Incorrect API key provided/,
     );
   });
 });

@@ -58,6 +58,21 @@ export function trimTrailingSlash(url: string): string {
   return url.replace(/\/+$/, "");
 }
 
+/** The provider's own error message from a JSON error body (OpenAI, Anthropic and Gemini shapes), or the raw text. */
+export function providerMessage(body: string): string {
+  const text = body.trim();
+  try {
+    let data: unknown = JSON.parse(text);
+    if (Array.isArray(data)) data = data[0];
+    const d = data as { error?: { message?: unknown } | string; message?: unknown } | null;
+    const msg = typeof d?.error === "string" ? d.error : (d?.error?.message ?? d?.message);
+    if (typeof msg === "string" && msg.trim()) return msg.replace(/\s+/g, " ").trim().slice(0, 300);
+  } catch {
+    // not JSON
+  }
+  return text.replace(/\s+/g, " ").slice(0, 200);
+}
+
 /** Turn a transport/HTTP failure into a message an admin can act on. */
 export function describeFailure(baseUrl: string, err: unknown, status?: number, body = ""): string {
   let origin = baseUrl;
@@ -66,13 +81,18 @@ export function describeFailure(baseUrl: string, err: unknown, status?: number, 
   } catch {
     // keep as typed
   }
-  if (status === 401 || status === 403) return `The provider rejected the API key (HTTP ${status}). Check the key and its permissions.`;
-  if (status === 404) return `Nothing found at ${baseUrl} (HTTP 404). Check the base URL — OpenAI-compatible servers usually end in /v1.`;
-  if (status === 429) return "The provider is rate-limiting this key (HTTP 429). Try again shortly or check your plan's limits.";
-  if (status) {
-    const detail = body.replace(/\s+/g, " ").trim().slice(0, 200);
-    return `The provider returned HTTP ${status}${detail ? `: ${detail}` : ""}.`;
+  const said = status ? providerMessage(body) : "";
+  const quote = said ? ` The provider said: "${said}"` : "";
+
+  if (/location is not supported|unsupported_country|not available in your (country|region)/i.test(said)) {
+    return `This provider doesn't offer its API in the country the request comes from (HTTP ${status}). Use another provider, or reach the same model through one that serves your region, e.g. OpenRouter.${quote}`;
   }
+  if (status === 401 || status === 403) return `The provider rejected the API key (HTTP ${status}). Check the key and its permissions.${quote}`;
+  if (status === 404) {
+    return `Not found (HTTP 404). Usually the model name is wrong or retired. Check the exact name in the provider's model list. If the name is right, check the base URL (OpenAI-compatible servers usually end in /v1).${quote}`;
+  }
+  if (status === 429) return `The provider is rate-limiting this key (HTTP 429). Try again shortly or check your plan's limits.${quote}`;
+  if (status) return `The provider returned HTTP ${status}.${quote}`;
   if (err instanceof Error && (err.name === "AbortError" || err.name === "TimeoutError")) {
     return `${origin} did not respond in time. Check the server is running, or raise the timeout for slow local models.`;
   }

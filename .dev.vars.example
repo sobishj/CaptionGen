@@ -1,0 +1,32 @@
+# Local development settings for CaptionGen (used by `npm run dev` and `npm run preview`).
+# Copy to .dev.vars and fill in. Never commit .dev.vars.
+# In production set secrets with `npx wrangler secret put <NAME>` (see README).
+
+# ---- Admin panel (/admin) ----
+# Owner sign-in. ADMIN_EMAIL can be an email or a plain username.
+ADMIN_EMAIL=admin
+ADMIN_PASSWORD=change-me-to-a-long-password
+
+# Encrypts API keys stored in the admin panel (AES-GCM). Any long random string.
+# Generate one with:  openssl rand -base64 32
+# or:                 node -e "console.log(require('crypto').randomBytes(32).toString('base64'))"
+# Don't change it later, or saved API keys can no longer be decrypted (re-enter them in /admin).
+ENCRYPTION_KEY=
+
+# Optional: separate key for signing admin sessions (defaults to ADMIN_PASSWORD).
+# SESSION_SECRET=
+
+# Optional: max caption requests per visitor IP per minute (default 10)
+RATE_LIMIT_PER_MINUTE=10
+
+# ---- Optional built-in model ----
+# Used only until a model is added in /admin, so the app works straight after deploy.
+# LLM_PROVIDER=openai            # "openai" (any OpenAI-compatible API) or "anthropic"
+# LLM_BASE_URL=https://api.openai.com/v1
+# LLM_API_KEY=
+# LLM_MODEL=gpt-4o-mini
+# LLM_MODEL_LABEL=GPT-4o mini
+# LLM_TIMEOUT_MS=30000
+# LLM_TEMPERATURE=0.8
+# LLM_MAX_TOKENS=2000
+# LLM_JSON_MODE=true

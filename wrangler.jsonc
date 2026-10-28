@@ -1,0 +1,22 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "captiongen",
+  "main": ".open-next/worker.js",
+  "compatibility_date": "2026-10-01",
+  "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
+  "assets": {
+    "directory": ".open-next/assets",
+    "binding": "ASSETS"
+  },
+  "observability": { "enabled": true },
+  // Stores admin settings: AI models (keys encrypted) and admin users.
+  // Create it once with `npx wrangler kv namespace create SETTINGS` and paste the id below.
+  "kv_namespaces": [{ "binding": "SETTINGS", "id": "REPLACE_WITH_KV_NAMESPACE_ID" }],
+  // Non-secret configuration. Secrets (ADMIN_PASSWORD, ENCRYPTION_KEY, optional SESSION_SECRET
+  // and LLM_API_KEY) are set with `npx wrangler secret put <NAME>`.
+  // AI models are managed in /admin; LLM_* only define an optional built-in model.
+  "vars": {
+    "ADMIN_EMAIL": "admin",
+    "RATE_LIMIT_PER_MINUTE": "10"
+  }
+}

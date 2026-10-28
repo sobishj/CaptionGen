@@ -20,7 +20,7 @@ export interface ProviderPreset {
 export const PROVIDERS: ProviderPreset[] = [
   { key: "openai", label: "OpenAI (GPT)", kind: "openai", defaultBaseUrl: "https://api.openai.com/v1", cloud: true, needsApiKey: true, exampleModel: "gpt-4o-mini", jsonMode: true },
   { key: "anthropic", label: "Anthropic (Claude)", kind: "anthropic", defaultBaseUrl: "https://api.anthropic.com", cloud: true, needsApiKey: true, exampleModel: "claude-haiku-4-5", jsonMode: false },
-  { key: "gemini", label: "Google (Gemini)", kind: "openai", defaultBaseUrl: "https://generativelanguage.googleapis.com/v1beta/openai", cloud: true, needsApiKey: true, exampleModel: "gemini-2.5-flash", jsonMode: true },
+  { key: "gemini", label: "Google (Gemini)", kind: "openai", defaultBaseUrl: "https://generativelanguage.googleapis.com/v1beta/openai", cloud: true, needsApiKey: true, exampleModel: "gemini-3.5-flash", jsonMode: true },
   { key: "groq", label: "Groq", kind: "openai", defaultBaseUrl: "https://api.groq.com/openai/v1", cloud: true, needsApiKey: true, exampleModel: "llama-3.3-70b-versatile", jsonMode: true },
   { key: "openrouter", label: "OpenRouter", kind: "openai", defaultBaseUrl: "https://openrouter.ai/api/v1", cloud: true, needsApiKey: true, exampleModel: "qwen/qwen-2.5-72b-instruct", jsonMode: false },
   { key: "deepseek", label: "DeepSeek", kind: "openai", defaultBaseUrl: "https://api.deepseek.com/v1", cloud: true, needsApiKey: true, exampleModel: "deepseek-chat", jsonMode: true },

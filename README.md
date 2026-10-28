@@ -155,7 +155,7 @@ Go to **/admin → AI models → Add model** and pick a provider. The base URL i
 |---|---|
 | OpenAI | API key → pick e.g. `gpt-4o-mini` from the fetched list |
 | Anthropic Claude | API key → e.g. `claude-haiku-4-5` |
-| Google Gemini | API key from Google AI Studio → e.g. `gemini-2.5-flash` |
+| Google Gemini | API key from Google AI Studio → e.g. `gemini-3.5-flash` or `gemini-3.5-flash-lite` (older 2.x models are closed to new keys) |
 | Groq / OpenRouter / DeepSeek / Mistral | API key → pick a model |
 | **Qwen, hosted** | *DeepInfra* (`Qwen/Qwen2.5-72B-Instruct`), *Alibaba Cloud Model Studio* (`qwen-plus`), *OpenRouter* (`qwen/qwen-2.5-72b-instruct`) or *Groq* |
 | **Qwen, self-hosted** | *Ollama*, *vLLM*, *LM Studio* or *llama.cpp server*. Enter your server's URL; no key is usually needed. The model list loads automatically (e.g. `qwen2.5:7b-instruct` or `Qwen/Qwen2.5-7B-Instruct`). |

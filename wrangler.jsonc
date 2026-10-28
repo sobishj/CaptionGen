@@ -14,6 +14,13 @@
   "observability": {
     "enabled": true
   },
+  // Run the server code in a US data centre. Some AI providers (e.g. Google Gemini) reject
+  // requests from regions they don't serve ("User location is not supported"), and Cloudflare
+  // otherwise runs the Worker near each visitor. Static files are still served from the nearest edge.
+  "placement": {
+    "mode": "targeted",
+    "region": "gcp:us-east1"
+  },
   // Stores admin settings: AI models (keys encrypted) and admin users.
   // KV namespace "CaptionGen" created in the Cloudflare dashboard.
   "kv_namespaces": [

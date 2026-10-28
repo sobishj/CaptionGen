@@ -3,17 +3,27 @@
   "name": "captiongen",
   "main": ".open-next/worker.js",
   "compatibility_date": "2026-10-01",
-  "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
+  "compatibility_flags": [
+    "nodejs_compat",
+    "global_fetch_strictly_public"
+  ],
   "assets": {
     "directory": ".open-next/assets",
     "binding": "ASSETS"
   },
-  "observability": { "enabled": true },
+  "observability": {
+    "enabled": true
+  },
   // Stores admin settings: AI models (keys encrypted) and admin users.
-  // Create it once with `npx wrangler kv namespace create SETTINGS` and paste the id below.
-  "kv_namespaces": [{ "binding": "SETTINGS", "id": "REPLACE_WITH_KV_NAMESPACE_ID" }],
+  // KV namespace "CaptionGen" created in the Cloudflare dashboard.
+  "kv_namespaces": [
+    {
+      "binding": "SETTINGS",
+      "id": "75c5e38b53bc4f9685c1e714c4909635"
+    }
+  ],
   // Non-secret configuration. Secrets (ADMIN_PASSWORD, ENCRYPTION_KEY, optional SESSION_SECRET
-  // and LLM_API_KEY) are set with `npx wrangler secret put <NAME>`.
+  // and LLM_API_KEY) are set in the Cloudflare dashboard → captiongen → Settings → Variables and Secrets.
   // AI models are managed in /admin; LLM_* only define an optional built-in model.
   "vars": {
     "ADMIN_EMAIL": "admin",
